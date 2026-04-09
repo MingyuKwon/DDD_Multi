@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Idle_To_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Locomotion/Idle/)",
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Walk_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Locomotion/Walk/)",
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Jog_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Locomotion/Jog/)",
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Sprint_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Locomotion/Sprint/)",
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Jump_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Jump/Jump/)",
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Double_Jump_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Jump/DoubleJump/)",
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Atk_2Combo_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Attack/Combo/)",
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Atk_3Combo_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Attack/Combo/)",
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Atk_8Combo_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Attack/Combo/)",
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Atk_4ComboShoot_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Attack/ComboShoot/)",
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Atk_HandShoot_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Attack/HandShoot/)",
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Skill_A_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Skill/Skill_A_Spinner/)",
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Skill_B_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Skill/Skill_B/)",
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Skill_C_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Skill/Skill_C_UpperAtk/)",
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Skill_D_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Skill/Skill_D_AirSpinAtk/)",
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Skill_E_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Skill/Skill_E_Ex/)",
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Dodge_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Dodge/)",
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Atk_Dodge_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Dodge/)",
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Rolling_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Roll/)",
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Dmg_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Hit/)",
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_KnockDown_*.uasset' D:/DDD/DDD/Content/DDD/Animation/KnockDown/)"
+    ]
+  }
+}
