@@ -55,6 +55,23 @@ UE 표준 규칙을 따름:
 
 - 파일을 읽을 때는 별도로 묻지 않고 바로 진행한다.
 
+### README 구조 규칙
+
+README는 루트 하나로 끝내지 않고 계층형 구조를 유지한다.
+
+```
+README.md                          # 루트 — 프로젝트 개요 + 하위 README 링크 목록
+docs/
+├── gamemode.md                    # GameplayMode FSM 흐름 상세
+├── fsm.md                         # FFiniteStateMachine / FFiniteState 사용법
+└── (시스템이 추가될 때마다 파일 추가)
+```
+
+- **루트 `README.md`**: 프로젝트 한 줄 소개, 기술 스택, 소스 구조, 셋업 방법, `docs/` 링크 목록만 포함. 상세 설명은 쓰지 않는다.
+- **`docs/*.md`**: 각 시스템의 상세 설명, 다이어그램, API 예시를 담는다. 파일명은 시스템명을 소문자로.
+- 새 시스템이 추가되면 `docs/` 에 해당 파일을 만들고 루트 `README.md` 링크 목록에 추가한다.
+- README.md 갱신 시 Variant(`Variant_Combat`, `Variant_Platforming`, `Variant_SideScrolling`) 관련 구조·설명은 포함하지 않는다.
+
 ## 작업 시 주의사항
 
 - `.sln` 파일은 gitignore됨 → `DDD.uproject` 우클릭 → "Generate Visual Studio project files"로 재생성
