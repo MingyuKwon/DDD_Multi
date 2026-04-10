@@ -51,6 +51,10 @@ UE 표준 규칙을 따름:
 - 파일명 = 클래스명 (접두사 포함): `CombatEnemy.h` → `ACombatEnemy`
 - Variant 클래스는 `Combat`, `Platforming`, `SideScrolling` 접두사 사용
 
+## Claude 행동 규칙
+
+- 파일을 읽을 때는 별도로 묻지 않고 바로 진행한다.
+
 ## 작업 시 주의사항
 
 - `.sln` 파일은 gitignore됨 → `DDD.uproject` 우클릭 → "Generate Visual Studio project files"로 재생성

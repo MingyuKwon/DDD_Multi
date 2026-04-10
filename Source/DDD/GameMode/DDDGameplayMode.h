@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "DDDGameplayMode.generated.h"
 
+class FFiniteStateMachine;
 /**
  * 
  */
@@ -13,5 +14,31 @@ UCLASS()
 class DDD_API ADDDGameplayMode : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
+protected:
+	enum class EGameplayState : uint8
+	{
+		Ready = 0,
+		Begin,
+		End,
+		MAX
+	};
+
+public:
+	// 게임 시작 시 초기화
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
+	virtual void InitGameState() override;
+
+	// 플레이어 로그인 완료 → 턴 FSM 시작 타이밍
+	virtual void PostLogin(APlayerController* NewPlayer) override;
+
+	// 레벨 시작 → BeginPlay 이후 FSM SetFirstState 타이밍
+	virtual void StartPlay() override;
+
+	// 플레이어 퇴장 시 FSM 정리
+	virtual void Logout(AController* Exiting) override;
+
+protected:
+	TSharedPtr<FFiniteStateMachine> FSM;
+	void InitFSM();
 };

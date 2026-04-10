@@ -21,7 +21,9 @@
       "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Atk_Dodge_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Dodge/)",
       "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Rolling_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Roll/)",
       "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_Dmg_*.uasset' D:/DDD/DDD/Content/DDD/Animation/Hit/)",
-      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_KnockDown_*.uasset' D:/DDD/DDD/Content/DDD/Animation/KnockDown/)"
+      "Bash(mv 'D:/DDD/DDD/Content/DDD/Animation/Anim_Gunner_KnockDown_*.uasset' D:/DDD/DDD/Content/DDD/Animation/KnockDown/)",
+      "Bash(git -C D:/DDD/DDD status --short)",
+      "Bash(git -C D:/DDD/DDD log --oneline -10)"
     ]
   }
 }
