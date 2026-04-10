@@ -6,6 +6,8 @@
 #include "Character/DDDCharacter.h"
 #include "DDDPlayerCharacter.generated.h"
 
+class USpringArmComponent;
+class UCameraComponent;
 /**
  * 
  */

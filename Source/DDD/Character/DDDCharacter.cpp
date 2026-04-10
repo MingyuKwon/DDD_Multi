@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "DDD.h"
+#include "AbilitySystem/DDDAbilitySystemComponent.h"
 
 ADDDCharacter::ADDDCharacter()
 {
@@ -35,7 +36,10 @@ ADDDCharacter::ADDDCharacter()
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 
+	AbilitySystemComponent = CreateDefaultSubobject<UDDDAbilitySystemComponent>(TEXT("DDDAbilitySystemComponent"));
+}
 
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
-	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+UAbilitySystemComponent* ADDDCharacter::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
 }

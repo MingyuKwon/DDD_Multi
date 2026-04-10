@@ -5,12 +5,11 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "AbilitySystemInterface.h"
 #include "DDDCharacter.generated.h"
 
-class USpringArmComponent;
-class UCameraComponent;
-class UInputAction;
-struct FInputActionValue;
+class UAbilitySystemComponent;
+class UDDDAbilitySystemComponent;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -19,16 +18,19 @@ DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
  *  Implements a controllable orbiting camera
  */
 UCLASS(abstract)
-class ADDDCharacter : public ACharacter
+class ADDDCharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
-
-
 
 public:
 	/** Constructor */
 	ADDDCharacter();	
 
+	//~IAbilitySystemInterface interface
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UDDDAbilitySystemComponent> AbilitySystemComponent;
 };
 

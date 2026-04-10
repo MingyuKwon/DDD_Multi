@@ -18,13 +18,17 @@ public class DDD : ModuleRules
 			"StateTreeModule",
 			"GameplayStateTreeModule",
 			"UMG",
-			"Slate"
-		});
+			"Slate",
+			"GameplayAbilities",
+			"GameplayTags",
+			"GameplayTasks"
+        });
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });
 
 		PublicIncludePaths.AddRange(new string[] {
 			"DDD",
+			"DDD/AbilitySystem",
 			"DDD/DataStruct",
 			"DDD/Variant_Platforming",
 			"DDD/Variant_Platforming/Animation",
