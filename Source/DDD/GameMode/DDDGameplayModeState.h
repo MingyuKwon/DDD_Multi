@@ -9,7 +9,12 @@
  */
 class FDDDGameplayModeState : public FFiniteState
 {
+public:
+	explicit FDDDGameplayModeState(const TSharedPtr<FFiniteStateMachine>& OwnerMachine) : FFiniteState(OwnerMachine) {}
 
+protected:
+	virtual void OnEnterImpl() override;
+	virtual void OnExitImpl() override;
 };
 
 /**
@@ -18,6 +23,53 @@ class FDDDGameplayModeState : public FFiniteState
  */
 class FDDDGameplayModeState_Begin : public FDDDGameplayModeState
 {
+public:
+	explicit FDDDGameplayModeState_Begin(const TSharedPtr<FFiniteStateMachine>& OwnerMachine) : FDDDGameplayModeState(OwnerMachine) {}
+
+protected:
+	virtual void OnEnterImpl() override;
+	virtual void OnUpdateImpl(float DeltaSeconds) override;
+	virtual void OnExitImpl() override;
+};
+
+class FDDDGameplayModeState_PlayerTurn : public FDDDGameplayModeState
+{
+public:
+	explicit FDDDGameplayModeState_PlayerTurn(const TSharedPtr<FFiniteStateMachine>& OwnerMachine) : FDDDGameplayModeState(OwnerMachine) {}
+
+protected:
+	virtual void OnEnterImpl() override;
+	virtual void OnUpdateImpl(float DeltaSeconds) override;
+	virtual void OnExitImpl() override;
+};
+
+class FDDDGameplayModeState_EnemyTurn : public FDDDGameplayModeState
+{
+public:
+	explicit FDDDGameplayModeState_EnemyTurn(const TSharedPtr<FFiniteStateMachine>& OwnerMachine) : FDDDGameplayModeState(OwnerMachine) {}
+
+protected:
+	virtual void OnEnterImpl() override;
+	virtual void OnUpdateImpl(float DeltaSeconds) override;
+	virtual void OnExitImpl() override;
+};
+
+class FDDDGameplayModeState_PlayerWin : public FDDDGameplayModeState
+{
+public:
+	explicit FDDDGameplayModeState_PlayerWin(const TSharedPtr<FFiniteStateMachine>& OwnerMachine) : FDDDGameplayModeState(OwnerMachine) {}
+
+protected:
+	virtual void OnEnterImpl() override;
+	virtual void OnUpdateImpl(float DeltaSeconds) override;
+	virtual void OnExitImpl() override;
+};
+
+class FDDDGameplayModeState_EnemyWin : public FDDDGameplayModeState
+{
+public:
+	explicit FDDDGameplayModeState_EnemyWin(const TSharedPtr<FFiniteStateMachine>& OwnerMachine) : FDDDGameplayModeState(OwnerMachine) {}
+
 protected:
 	virtual void OnEnterImpl() override;
 	virtual void OnUpdateImpl(float DeltaSeconds) override;
@@ -30,6 +82,9 @@ protected:
  */
 class FDDDGameplayModeState_End : public FDDDGameplayModeState
 {
+public:
+	explicit FDDDGameplayModeState_End(const TSharedPtr<FFiniteStateMachine>& OwnerMachine) : FDDDGameplayModeState(OwnerMachine) {}
+
 protected:
 	virtual void OnEnterImpl() override;
 	virtual void OnUpdateImpl(float DeltaSeconds) override;

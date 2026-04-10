@@ -22,7 +22,7 @@ TSharedPtr<FFiniteState> FFiniteStateMachine::RegisterState(uint8 StateID, TShar
 
 	if (!State.IsValid())
 	{
-		State = MakeShared<FFiniteState>();
+		State = MakeShared<FFiniteState>(SharedThis(this));
 	}
 
 	State->Init(StateID);

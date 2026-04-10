@@ -1,5 +1,7 @@
 #include "FiniteState.h"
 
+#include "FiniteStateMachine.h"
+
 void FFiniteState::Init(uint8 InStateID)
 {
 	StateID = InStateID;
@@ -12,6 +14,14 @@ void FFiniteState::AddTransition(uint8 InStateID)
 	{
 		Transitions.Add(InStateID);
 	}
+}
+
+bool FFiniteState::TransitState(uint8 State) const
+{
+	check(OwnerMachine.IsValid());
+
+	TSharedPtr<FFiniteStateMachine> Machine = OwnerMachine.Pin();
+	return Machine->TransitState(State);
 }
 
 void FFiniteState::OnEnter()

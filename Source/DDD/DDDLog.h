@@ -1,4 +1,5 @@
 #pragma once
+#include "StringFunctionLibrary.h"
 
 #define DDD_LOG(CategoryName, Verbosity, Format, ...) \
 		UE_LOG(CategoryName, Verbosity, TEXT("[Frame: %04llu] %s"), GFrameCounter, *FString::Printf(Format, ##__VA_ARGS__))

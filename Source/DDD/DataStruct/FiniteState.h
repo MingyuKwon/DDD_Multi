@@ -21,7 +21,7 @@ class FFiniteState : public TSharedFromThis<FFiniteState>
 	DECLARE_DELEGATE_OneParam(FStateUpdateDelegate, float)
 
 public:
-	FFiniteState() = default;
+	explicit  FFiniteState(const TSharedPtr<FFiniteStateMachine>& OwnerMachine) : OwnerMachine(OwnerMachine) {}
 	virtual ~FFiniteState() {}
 
 	static constexpr uint8 INVALID_STATE_ID = MAX_uint8;
@@ -57,17 +57,24 @@ public:
 	void SetUpdateEnabled(bool bEnabled) { bUpdateEnabled = bEnabled; }
 	bool IsUpdateEnabled() const { return bUpdateEnabled; }
 
+	/** 현재 상태에서 TargetState 로 전이 요청. 허용된 Transition 이 없으면 실패. */
+	template<class T, typename = std::enable_if_t<std::is_enum_v<T>>>
+	bool TransitState(const T TargetState) { return TransitState(static_cast<uint8>(TargetState)); }
+
 protected:
 	/** 서브클래스에서 오버라이드 가능 */
 	virtual void OnEnterImpl() {}
 	virtual void OnUpdateImpl(float DeltaSeconds) {}
 	virtual void OnExitImpl() {}
 
+
 private:
 	void OnEnter();
 	void OnUpdate(float DeltaSeconds);
 	void OnExit();
 	void AddTransition(uint8 InStateID);
+
+	bool TransitState(uint8 State) const;
 
 private:
 	uint8 StateID = INVALID_STATE_ID;
@@ -78,5 +85,7 @@ private:
 	FStateUpdateDelegate OnUpdateDelegate;
 	FStateDelegate OnExitDelegate;
 
-	friend class FFiniteStateMachine;
+	TWeakPtr<FFiniteStateMachine> OwnerMachine;
+
+	friend FFiniteStateMachine;
 };

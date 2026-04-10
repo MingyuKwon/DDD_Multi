@@ -7,6 +7,19 @@
 #include "DDDGameplayMode.generated.h"
 
 class FFiniteStateMachine;
+
+UENUM()
+enum class EGameplayModeState : uint8
+{
+	Ready = 0,
+	Begin,
+	PlayerTurn,
+	EnemyTurn,
+	PlayerWin,
+	EnemyWin,
+	End,
+	MAX
+};
 /**
  * 
  */
@@ -14,15 +27,6 @@ UCLASS()
 class DDD_API ADDDGameplayMode : public AGameModeBase
 {
 	GENERATED_BODY()
-
-protected:
-	enum class EGameplayState : uint8
-	{
-		Ready = 0,
-		Begin,
-		End,
-		MAX
-	};
 
 public:
 	// 게임 시작 시 초기화
