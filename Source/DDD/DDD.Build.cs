@@ -28,7 +28,9 @@ public class DDD : ModuleRules
 
 		PublicIncludePaths.AddRange(new string[] {
 			"DDD",
+			"DDD/ActorComponent",
 			"DDD/AbilitySystem",
+			"DDD/AbilitySystem/Ability",
 			"DDD/DataStruct",
 			"DDD/Variant_Platforming",
 			"DDD/Variant_Platforming/Animation",

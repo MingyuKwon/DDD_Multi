@@ -10,6 +10,7 @@
 
 class UAbilitySystemComponent;
 class UDDDAbilitySystemComponent;
+class UDDDInventoryComponent;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -26,11 +27,14 @@ public:
 	/** Constructor */
 	ADDDCharacter();	
 
-	//~IAbilitySystemInterface interface
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	UDDDInventoryComponent* GetInventoryComponent() const { return InventoryComponent; }
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UDDDAbilitySystemComponent> AbilitySystemComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UDDDInventoryComponent> InventoryComponent;
 };
 

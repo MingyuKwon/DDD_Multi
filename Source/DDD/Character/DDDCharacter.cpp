@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "DDD.h"
+#include "DDDInventoryComponent.h"
 #include "AbilitySystem/DDDAbilitySystemComponent.h"
 
 ADDDCharacter::ADDDCharacter()
@@ -37,6 +38,7 @@ ADDDCharacter::ADDDCharacter()
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 
 	AbilitySystemComponent = CreateDefaultSubobject<UDDDAbilitySystemComponent>(TEXT("DDDAbilitySystemComponent"));
+	InventoryComponent = CreateDefaultSubobject<UDDDInventoryComponent>(TEXT("DDDInventoryComponent"));
 }
 
 UAbilitySystemComponent* ADDDCharacter::GetAbilitySystemComponent() const
