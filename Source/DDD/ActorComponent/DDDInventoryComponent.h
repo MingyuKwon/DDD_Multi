@@ -3,10 +3,11 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "GameplayTagContainer.h"
+#include "DDDGameplayTags.h"
 #include "DDDInventoryComponent.generated.h"
 
 USTRUCT(BlueprintType)
-struct FBulletItemEntry
+struct FBulletCardEntry
 {
     GENERATED_BODY()
 
@@ -21,7 +22,7 @@ struct FBulletItemEntry
         return BulletType.IsValid() && Scale > 0;
 	}
 
-    bool operator==(const FBulletItemEntry& Other) const
+    bool operator==(const FBulletCardEntry& Other) const
     {
 		return BulletType == Other.BulletType && Scale == Other.Scale;
     }
@@ -37,11 +38,22 @@ class DDD_API UDDDInventoryComponent : public UActorComponent
 public:
     UDDDInventoryComponent();
 
-	void AddBullet(const FGameplayTag& BulletType, int32 Scale);
-    bool RemoveBullet(const FGameplayTag& BulletType, int32 Scale);
+#pragma region 
+    UFUNCTION(Server, Reliable)
+    void ServerAddBulletToDeck(const FGameplayTag& BulletType, int32 Scale);
+    UFUNCTION(Server, Reliable)
+    void ServerRemoveBulletFromDeck(const FGameplayTag& BulletType, int32 Scale);
 
-    void RotateCylinder(bool bDamageCylinder, bool bClockWise);
-    FBulletItemEntry GetCurrentBullet(bool bDamageCylinder);
+    UFUNCTION(Server, Reliable)
+    void ServerAddBulletToHand(const FGameplayTag& BulletType, int32 Scale);
+    UFUNCTION(Server, Reliable)
+    void ServerRemoveBulletFromHand(const FGameplayTag& BulletType, int32 Scale);
+
+    UFUNCTION(Server, Reliable)
+    void ServerRotateHand(bool bDamageHand, bool bClockwise);
+#pragma endregion
+
+    FBulletCardEntry GetCurrentBullet(bool bDamageHand);
 
     virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -49,15 +61,43 @@ public:
     FOnInventoryChanged OnInventoryChanged;
 
 private:
-    UPROPERTY(ReplicatedUsing = OnRep_DamageBulletsCylinder)
-    TArray<FBulletItemEntry> DamageBulletsCylinder;
+    bool IsBulletTypeDamage(const FGameplayTag& BulletType) const { return BulletType == TAG_Bullet_Damage; }
+	bool HasAuthority() const { return GetOwnerRole() == ROLE_Authority; }
+#pragma region
+    void AddBulletToDeck_Internal(const FGameplayTag& BulletType, int32 Scale);
+    bool RemoveBulletFromDeck_Internal(const FGameplayTag& BulletType, int32 Scale);
 
-    UPROPERTY(ReplicatedUsing = OnRep_BuffBulletsCylinder)
-    TArray<FBulletItemEntry> BuffBulletsCylinder;
+    void AddBulletToHand_Internal(const FGameplayTag& BulletType, int32 Scale);
+    bool RemoveBulletFromHand_Internal(const FGameplayTag& BulletType, int32 Scale);
+
+    void RotateHand_Internal(bool bDamageHand, bool bClockwise);
+#pragma endregion
+
+    UPROPERTY(ReplicatedUsing = OnRep_DamageBulletDeck)
+    TArray<FBulletCardEntry> DamageBulletDeck;
+    UPROPERTY(ReplicatedUsing = OnRep_DamageBulletHand)
+    TArray<FBulletCardEntry> DamageBulletHand;
+    UPROPERTY(ReplicatedUsing = OnRep_CurrentDamageBulletIndex)
+    int32 CurrentDamageBulletIndex = 0;
+
+    UPROPERTY(ReplicatedUsing = OnRep_BuffBulletDeck)
+    TArray<FBulletCardEntry> BuffBulletDeck;
+    UPROPERTY(ReplicatedUsing = OnRep_BuffBulletHand)
+    TArray<FBulletCardEntry> BuffBulletHand;
+    UPROPERTY(ReplicatedUsing = OnRep_CurrentBuffBulletIndex)
+    int32 CurrentBuffBulletIndex = 0;
 
     UFUNCTION()
-    void OnRep_DamageBulletsCylinder();
+    void OnRep_DamageBulletDeck();
+    UFUNCTION()
+    void OnRep_DamageBulletHand();
+    UFUNCTION()
+    void OnRep_CurrentDamageBulletIndex();
 
+    UFUNCTION()
+    void OnRep_BuffBulletDeck();
 	UFUNCTION()
-    void OnRep_BuffBulletsCylinder();
+    void OnRep_BuffBulletHand();
+    UFUNCTION()
+    void OnRep_CurrentBuffBulletIndex();
 };

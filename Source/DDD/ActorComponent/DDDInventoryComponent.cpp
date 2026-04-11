@@ -1,6 +1,4 @@
 #include "ActorComponent/DDDInventoryComponent.h"
-
-#include "DDDGameplayTags.h"
 #include "Net/UnrealNetwork.h"
 
 UDDDInventoryComponent::UDDDInventoryComponent()
@@ -8,84 +6,209 @@ UDDDInventoryComponent::UDDDInventoryComponent()
     SetIsReplicatedByDefault(true);
 }
 
-void UDDDInventoryComponent::AddBullet(const FGameplayTag& BulletType, int32 Scale)
+void UDDDInventoryComponent::AddBulletToDeck_Internal(const FGameplayTag& BulletType, int32 Scale)
 {
-	FBulletItemEntry BulletEntry;
+	FBulletCardEntry BulletEntry;
     BulletEntry.BulletType = BulletType;
     BulletEntry.Scale = Scale;  
 
     if (BulletType == TAG_Bullet_Damage)
     {
-        DamageBulletsCylinder.Add(BulletEntry);
+        DamageBulletDeck.Add(BulletEntry);
     }
     else
     {
-        BuffBulletsCylinder.Add(BulletEntry);
+        BuffBulletDeck.Add(BulletEntry);
     }
 }
 
-
-bool UDDDInventoryComponent::RemoveBullet(const FGameplayTag& BulletType, int32 Scale)
+bool UDDDInventoryComponent::RemoveBulletFromDeck_Internal(const FGameplayTag& BulletType, int32 Scale)
 {
-    FBulletItemEntry BulletEntry;
+    FBulletCardEntry BulletEntry;
     BulletEntry.BulletType = BulletType;
     BulletEntry.Scale = Scale;
 
     if (BulletType == TAG_Bullet_Damage)
     {
-        return DamageBulletsCylinder.RemoveSingle(BulletEntry) > 0;
+        return DamageBulletDeck.RemoveSingle(BulletEntry) > 0;
     }
     else
     {
-        return BuffBulletsCylinder.RemoveSingle(BulletEntry) > 0;
+        return BuffBulletDeck.RemoveSingle(BulletEntry) > 0;
 	}
 }
 
-void UDDDInventoryComponent::RotateCylinder(bool bDamageCylinder, bool bClockWise)
+void UDDDInventoryComponent::AddBulletToHand_Internal(const FGameplayTag& BulletType, int32 Scale)
 {
-    TArray<FBulletItemEntry>& Cylinder = bDamageCylinder ? DamageBulletsCylinder : BuffBulletsCylinder;
-	
-    if (Cylinder.Num() > 0)
-    {
-        if (bClockWise)
-        {
-            FBulletItemEntry LastBullet = Cylinder.Last();
-            Cylinder.RemoveAt(Cylinder.Num() - 1);
-            Cylinder.Insert(LastBullet, 0);
-        }
-        else
-        {
-            FBulletItemEntry FirstBullet = Cylinder[0];
-            Cylinder.RemoveAt(0);
-            Cylinder.Add(FirstBullet);
-        }
-	}
-}
+	bool bIsDamageBullet = BulletType == TAG_Bullet_Damage;
 
-FBulletItemEntry UDDDInventoryComponent::GetCurrentBullet(bool bDamageCylinder)
-{
-	TArray<FBulletItemEntry>& Cylinder = bDamageCylinder ? DamageBulletsCylinder : BuffBulletsCylinder;
-    if (Cylinder.Num() > 0)
+    FBulletCardEntry BulletEntry;
+    BulletEntry.BulletType = BulletType;
+    BulletEntry.Scale = Scale;  
+
+    if (bIsDamageBullet)
     {
-        return Cylinder[0];
+        DamageBulletHand.Add(BulletEntry);
     }
-	return FBulletItemEntry();
+    else
+    {
+        BuffBulletHand.Add(BulletEntry);
+	}
+}
+
+bool UDDDInventoryComponent::RemoveBulletFromHand_Internal(const FGameplayTag& BulletType, int32 Scale)
+{
+    bool bIsDamageBullet = BulletType == TAG_Bullet_Damage;
+
+    FBulletCardEntry BulletEntry;
+    BulletEntry.BulletType = BulletType;
+    BulletEntry.Scale = Scale;
+
+    if (bIsDamageBullet)
+    {
+        return DamageBulletHand.RemoveSingle(BulletEntry) > 0;
+    }
+    else
+    {
+        return BuffBulletHand.RemoveSingle(BulletEntry) > 0;
+    }
+}
+
+void UDDDInventoryComponent::RotateHand_Internal(bool bDamageHand, bool bClockwise)
+{
+    TArray<FBulletCardEntry>& Hand = bDamageHand ? DamageBulletHand : BuffBulletHand;
+	int32& CurrentIndex = bDamageHand ? CurrentDamageBulletIndex : CurrentBuffBulletIndex;
+
+    int32 MaxHand = Hand.Num();
+    if (bClockwise)
+    {
+        CurrentIndex = (CurrentIndex + 1) % MaxHand;
+    }
+    else
+    {
+        CurrentIndex = (CurrentIndex - 1 + MaxHand) % MaxHand;
+	}
+}
+
+FBulletCardEntry UDDDInventoryComponent::GetCurrentBullet(bool bDamageHand)
+{
+	TArray<FBulletCardEntry>& Hand = bDamageHand ? DamageBulletHand : BuffBulletHand;
+    if (Hand.Num() > 0)
+    {
+        return Hand[0];
+    }
+
+	return FBulletCardEntry();
 }
 
 void UDDDInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-    DOREPLIFETIME(UDDDInventoryComponent, DamageBulletsCylinder);
-    DOREPLIFETIME(UDDDInventoryComponent, BuffBulletsCylinder);
+    DOREPLIFETIME(UDDDInventoryComponent, DamageBulletDeck);
+    DOREPLIFETIME(UDDDInventoryComponent, DamageBulletHand);
+    DOREPLIFETIME(UDDDInventoryComponent, BuffBulletDeck);
+    DOREPLIFETIME(UDDDInventoryComponent, BuffBulletHand);
+    DOREPLIFETIME(UDDDInventoryComponent, CurrentDamageBulletIndex);
+    DOREPLIFETIME(UDDDInventoryComponent, CurrentBuffBulletIndex);
 }
 
-void UDDDInventoryComponent::OnRep_DamageBulletsCylinder()
+void UDDDInventoryComponent::ServerRemoveBulletFromHand_Implementation(const FGameplayTag& BulletType, int32 Scale)
+{
+	RemoveBulletFromHand_Internal(BulletType, Scale);
+
+    if (IsBulletTypeDamage(BulletType))
+    {
+        OnRep_DamageBulletHand();
+    }
+    else
+    {
+        OnRep_BuffBulletHand();
+    }
+}
+
+void UDDDInventoryComponent::ServerAddBulletToHand_Implementation(const FGameplayTag& BulletType, int32 Scale)
+{
+    AddBulletToHand_Internal(BulletType, Scale);
+
+    if (IsBulletTypeDamage(BulletType))
+    {
+        OnRep_DamageBulletHand();
+    }
+    else
+    {
+        OnRep_BuffBulletHand();
+    }
+}
+
+void UDDDInventoryComponent::ServerRemoveBulletFromDeck_Implementation(const FGameplayTag& BulletType, int32 Scale)
+{
+	RemoveBulletFromDeck_Internal(BulletType, Scale);
+
+    if (IsBulletTypeDamage(BulletType))
+    {
+        OnRep_DamageBulletDeck();
+    }
+    else
+    {
+        OnRep_BuffBulletDeck();
+    }
+}
+
+void UDDDInventoryComponent::ServerAddBulletToDeck_Implementation(const FGameplayTag& BulletType, int32 Scale)
+{
+	AddBulletToDeck_Internal(BulletType, Scale);
+
+    if(IsBulletTypeDamage(BulletType))
+    {
+        OnRep_DamageBulletDeck();
+    }
+    else
+    {
+        OnRep_BuffBulletDeck();
+    }
+}
+
+void UDDDInventoryComponent::ServerRotateHand_Implementation(bool bDamageHand, bool bClockwise)
+{
+    RotateHand_Internal(bDamageHand, bClockwise);
+
+    if(bDamageHand)
+    {
+        OnRep_CurrentDamageBulletIndex();
+    }
+    else
+    {
+        OnRep_CurrentBuffBulletIndex();
+	}
+}
+
+void UDDDInventoryComponent::OnRep_DamageBulletDeck()
 {
 	OnInventoryChanged.Broadcast();
 }
 
-void UDDDInventoryComponent::OnRep_BuffBulletsCylinder()
+void UDDDInventoryComponent::OnRep_DamageBulletHand()
+{
+    OnInventoryChanged.Broadcast();
+}
+
+void UDDDInventoryComponent::OnRep_CurrentDamageBulletIndex()
+{
+    OnInventoryChanged.Broadcast();
+}
+
+void UDDDInventoryComponent::OnRep_BuffBulletDeck()
+{
+    OnInventoryChanged.Broadcast();
+}
+
+void UDDDInventoryComponent::OnRep_BuffBulletHand()
+{
+    OnInventoryChanged.Broadcast();
+}
+
+void UDDDInventoryComponent::OnRep_CurrentBuffBulletIndex()
 {
     OnInventoryChanged.Broadcast();
 }
