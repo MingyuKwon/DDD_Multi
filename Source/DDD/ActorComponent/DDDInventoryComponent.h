@@ -28,7 +28,7 @@ struct FBulletCardEntry
     }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryChanged);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FHandIndexChanged, int32, index);
 
 UCLASS(ClassGroup = "DDD", meta = (BlueprintSpawnableComponent))
 class DDD_API UDDDInventoryComponent : public UActorComponent
@@ -57,8 +57,13 @@ public:
 
     virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-    UPROPERTY(BlueprintAssignable, Category = "Inventory")
-    FOnInventoryChanged OnInventoryChanged;
+    FSimpleMulticastDelegate OnDamageDeckChanged;
+	FSimpleMulticastDelegate OnBuffDeckChanged;
+	FSimpleMulticastDelegate OnDamageHandChanged;
+	FSimpleMulticastDelegate OnBuffHandChanged;
+
+	FHandIndexChanged OnDamageHandIndexChanged;
+	FHandIndexChanged OnBuffHandIndexChanged;
 
 private:
     bool IsBulletTypeDamage(const FGameplayTag& BulletType) const { return BulletType == TAG_Bullet_Damage; }

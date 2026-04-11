@@ -93,9 +93,11 @@ void UDDDInventoryComponent::RotateHand_Internal(bool bDamageHand, bool bClockwi
 FBulletCardEntry UDDDInventoryComponent::GetCurrentBullet(bool bDamageHand)
 {
 	TArray<FBulletCardEntry>& Hand = bDamageHand ? DamageBulletHand : BuffBulletHand;
-    if (Hand.Num() > 0)
+	int32 CurrentIndex = bDamageHand ? CurrentDamageBulletIndex : CurrentBuffBulletIndex;
+
+    if (Hand.IsValidIndex(CurrentIndex))
     {
-        return Hand[0];
+        return Hand[CurrentIndex];
     }
 
 	return FBulletCardEntry();
@@ -185,30 +187,30 @@ void UDDDInventoryComponent::ServerRotateHand_Implementation(bool bDamageHand, b
 
 void UDDDInventoryComponent::OnRep_DamageBulletDeck()
 {
-	OnInventoryChanged.Broadcast();
+    OnDamageDeckChanged.Broadcast();
 }
 
 void UDDDInventoryComponent::OnRep_DamageBulletHand()
 {
-    OnInventoryChanged.Broadcast();
+    OnDamageHandChanged.Broadcast();
 }
 
 void UDDDInventoryComponent::OnRep_CurrentDamageBulletIndex()
 {
-    OnInventoryChanged.Broadcast();
+    OnDamageHandIndexChanged.Broadcast(CurrentDamageBulletIndex);
 }
 
 void UDDDInventoryComponent::OnRep_BuffBulletDeck()
 {
-    OnInventoryChanged.Broadcast();
+    OnBuffDeckChanged.Broadcast();
 }
 
 void UDDDInventoryComponent::OnRep_BuffBulletHand()
 {
-    OnInventoryChanged.Broadcast();
+    OnBuffHandChanged.Broadcast();
 }
 
 void UDDDInventoryComponent::OnRep_CurrentBuffBulletIndex()
 {
-    OnInventoryChanged.Broadcast();
+    OnBuffHandIndexChanged.Broadcast(CurrentBuffBulletIndex);
 }
